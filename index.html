@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Hello World</title>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <div id="root2"></div>
+    <div id="root3"></div>
+
+    <script type="text/babel">
+        ReactDOM.render(
+            <h1>{new Date().toLocaleDateString()}</h1>,
+            document.getElementById('root')
+        );
+    </script>
+
+    <script type="text/babel">
+        let data = [
+            {
+                stock_name: "EFX",
+                company_name: "Equifax Inc",
+                price: 163.55,
+                currency: "USD",
+                change: "+9.03"
+            },
+            {
+                stock_name: "IRM",
+                company_name: "Iron Mountain Inc",
+                price: 33.21,
+                currency: "USD",
+                change: "+1.42"
+            },
+            {
+                stock_name: "NTAP",
+                company_name: "NetApp Inc",
+                price: 54.81,
+                currency: "USD",
+                change: "-6.01"
+            },
+            {
+                stock_name: "CTL",
+                company_name: "Centurylink Inc",
+                price: 13.79,
+                currency: "USD",
+                change: "-1.37"
+            }
+        ]
+
+        let createRow = (j) => {
+            let rowData = [];
+            for (let i in data[j]) {
+                let styleName = {
+                    border: 'solid 1px',
+                    color: 'black'
+                };
+                if (data[j][i] === data[j].change) {
+                    +data[j].change > 0 ? styleName.color = 'green' : styleName.color = 'red';
+                }
+                rowData.push(<td key={i} style={styleName}>{data[j][i]}</td>);
+            }
+            return rowData;
+        };
+
+        let building = () => {
+            let buildingRows = []
+            for (let j = 0; j < data.length; j++) {
+                buildingRows.push(<tr key={data[j].stock_name}>{createRow(j)}</tr>);
+            }
+            return buildingRows;
+        }
+
+        let companyTable = (
+            <table>
+                <tbody>
+                    {building()}
+                </tbody>
+            </table>
+        );
+
+        ReactDOM.render(
+            companyTable,
+            document.getElementById('root2')
+        );
+    </script>
+
+    <script type="text/babel">
+        let tdColor = (i, j) => {
+            return (i % 2 === j % 2 ? 'black' : 'white');
+        }
+
+        let notesCol = (j) => {
+            let number = 9 - j;
+            let tdNumber = <td key={`number-${j}`}>{number}</td>;
+            return (<tr key={`row-${j}`}>{tdNumber} {row(j)} {tdNumber}</tr>);
+        }
+
+        let notesRow = () => {
+            let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+                notesRow = [<td key="empty" />],
+                tdNoteStyle = {
+                    padding: '0 18px'
+                };
+            for (let i = 0; i < letters.length; i++) {
+                notesRow.push(<td key={`note-${i}`} style={tdNoteStyle}>{letters[i]}</td>);
+            }
+            return notesRow;
+        }
+
+        let row = (j) => {
+            let rowCells = [];
+            for (let i = 0; i < 8; i++) {
+                let tdStyle = {
+                    width: '40px',
+                    height: '40px',
+                    border: 'black solid 1px',
+                    background: tdColor(i, j)
+                };
+                rowCells.push(<td key={`cell-${i}-${j}`} style={tdStyle} />);
+            }
+            return rowCells;
+        }
+
+        let board = () => {
+            let boardRows = [];
+            for (let j = 0; j < 8; j++) {
+                boardRows.push(notesCol(j));
+            }
+            return boardRows;
+        }
+
+        let createTable = (
+            <table>
+                <tbody>
+                    {notesRow()}
+                    {board()}
+                    {notesRow()}
+                </tbody>
+            </table>
+        );
+
+        ReactDOM.render(
+            createTable,
+            document.getElementById('root3')
+        );
+    </script>
+</body>
+
+</html>
